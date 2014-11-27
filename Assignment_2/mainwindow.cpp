@@ -22,9 +22,11 @@ MainWindow::MainWindow(QWidget *parent)
     left_layout->addWidget(add_image_button,      2, 0);
     left_layout->addWidget(remove_all_button,     3, 0);
 
-    // Set Layout & Central Widget
+    // Set Pixel Length
+    left_layout->setVerticalSpacing(4);
+
+    // Set Layout
     left_widget->setLayout(left_layout);
-    //this->setCentralWidget(left_widget);
 
     //Create Temp Buttons, Temp Widget, & Temp Layout
     QPushButton *temp_button_one   = new QPushButton("Temp 1");

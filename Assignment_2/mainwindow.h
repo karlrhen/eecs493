@@ -18,11 +18,8 @@ public:
 
 private:
     QGridLayout *left_layout;
-
-    QWidget *left_widget;
-
-    QSplitter *screen_splitter;
-
+    QWidget     *left_widget;
+    QSplitter   *screen_splitter;
 
     QPushButton *add_collection_button;
     QPushButton *add_image_button;

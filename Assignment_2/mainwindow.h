@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QWidget>
+#include <QSplitter>
 
 class MainWindow : public QMainWindow
 {
@@ -19,6 +20,9 @@ private:
     QGridLayout *left_layout;
 
     QWidget *left_widget;
+
+    QSplitter *screen_splitter;
+
 
     QPushButton *add_collection_button;
     QPushButton *add_image_button;

@@ -46,10 +46,14 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../Assignment_2/main.cpp \
-		../Assignment_2/mainwindow.cpp moc_mainwindow.cpp
+		../Assignment_2/mainwindow.cpp \
+		../Assignment_2/boximage.cpp moc_mainwindow.cpp \
+		moc_boximage.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
-		moc_mainwindow.o
+		boximage.o \
+		moc_mainwindow.o \
+		moc_boximage.o
 DIST          = ../../../Qt5.3.2/5.3/clang_64/mkspecs/features/spec_pre.prf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/qdevice.pri \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/device_config.prf \
@@ -145,6 +149,7 @@ DIST          = ../../../Qt5.3.2/5.3/clang_64/mkspecs/features/spec_pre.prf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/qt_config.prf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/spec_post.prf \
+		../Assignment_2/.qmake.stash \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/default_pre.prf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -166,7 +171,8 @@ DIST          = ../../../Qt5.3.2/5.3/clang_64/mkspecs/features/spec_pre.prf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/yacc.prf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/lex.prf \
 		../Assignment_2/Assignment_2.pro ../Assignment_2/main.cpp \
-		../Assignment_2/mainwindow.cpp
+		../Assignment_2/mainwindow.cpp \
+		../Assignment_2/boximage.cpp
 QMAKE_TARGET  = Assignment_2
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = Assignment_2.app/Contents/MacOS/Assignment_2
@@ -305,6 +311,7 @@ Makefile: ../Assignment_2/Assignment_2.pro ../../../Qt5.3.2/5.3/clang_64/mkspecs
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/qt_config.prf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/default_pre.prf \
 		../../../Qt5.3.2/5.3/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -425,6 +432,7 @@ Makefile: ../Assignment_2/Assignment_2.pro ../../../Qt5.3.2/5.3/clang_64/mkspecs
 ../../../Qt5.3.2/5.3/clang_64/mkspecs/features/qt_config.prf:
 ../../../Qt5.3.2/5.3/clang_64/mkspecs/macx-clang/qmake.conf:
 ../../../Qt5.3.2/5.3/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../Qt5.3.2/5.3/clang_64/mkspecs/features/exclusive_builds.prf:
 ../../../Qt5.3.2/5.3/clang_64/mkspecs/features/default_pre.prf:
 ../../../Qt5.3.2/5.3/clang_64/mkspecs/features/mac/default_pre.prf:
@@ -468,7 +476,7 @@ Assignment_2.app/Contents/Info.plist:
 	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,@TYPEINFO@,????,g" -e "s,@ICON@,,g" -e "s,@BUNDLEIDENTIFIER@,com.karlrhen.Assignment_2,g" -e "s,@EXECUTABLE@,Assignment_2,g" -e "s,@TYPEINFO@,????,g" ../../../Qt5.3.2/5.3/clang_64/mkspecs/macx-clang/Info.plist.app >Assignment_2.app/Contents/Info.plist
 dist: 
 	@test -d .tmp/Assignment_21.0.0 || mkdir -p .tmp/Assignment_21.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/Assignment_21.0.0/ && $(COPY_FILE) --parents ../Assignment_2/mainwindow.h .tmp/Assignment_21.0.0/ && $(COPY_FILE) --parents ../Assignment_2/main.cpp ../Assignment_2/mainwindow.cpp .tmp/Assignment_21.0.0/ && (cd `dirname .tmp/Assignment_21.0.0` && $(TAR) Assignment_21.0.0.tar Assignment_21.0.0 && $(COMPRESS) Assignment_21.0.0.tar) && $(MOVE) `dirname .tmp/Assignment_21.0.0`/Assignment_21.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Assignment_21.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/Assignment_21.0.0/ && $(COPY_FILE) --parents ../Assignment_2/mainwindow.h ../Assignment_2/boximage.h .tmp/Assignment_21.0.0/ && $(COPY_FILE) --parents ../Assignment_2/main.cpp ../Assignment_2/mainwindow.cpp ../Assignment_2/boximage.cpp .tmp/Assignment_21.0.0/ && (cd `dirname .tmp/Assignment_21.0.0` && $(TAR) Assignment_21.0.0.tar Assignment_21.0.0 && $(COMPRESS) Assignment_21.0.0.tar) && $(MOVE) `dirname .tmp/Assignment_21.0.0`/Assignment_21.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Assignment_21.0.0
 
 
 clean:compiler_clean 
@@ -493,17 +501,53 @@ compiler_objective_c_make_all:
 compiler_objective_c_clean:
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_mainwindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_boximage.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_boximage.cpp
 moc_mainwindow.cpp: ../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QPushButton \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QGridLayout \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QWidget \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qwidget.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QSplitter \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qsplitter.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenu \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenu.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenuBar \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenubar.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qaction.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QScrollArea \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qscrollarea.h \
 		../Assignment_2/mainwindow.h
 	/Users/karlhenderson/Qt5.3.2/5.3/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/Users/karlhenderson/Qt5.3.2/5.3/clang_64/mkspecs/macx-clang -I/Users/karlhenderson/Documents/eecs493/Assignment_2 -I/Users/karlhenderson/Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Headers -I/Users/karlhenderson/Qt5.3.2/5.3/clang_64/lib/QtGui.framework/Headers -I/Users/karlhenderson/Qt5.3.2/5.3/clang_64/lib/QtCore.framework/Headers -I. -F/Users/karlhenderson/Qt5.3.2/5.3/clang_64/lib ../Assignment_2/mainwindow.h -o moc_mainwindow.cpp
+
+moc_boximage.cpp: ../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QWidget \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qwidget.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h \
+		../Assignment_2/mainwindow.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QPushButton \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QGridLayout \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QSplitter \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qsplitter.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenu \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenu.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenuBar \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenubar.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qaction.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QScrollArea \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qscrollarea.h \
+		../Assignment_2/boximage.h
+	/Users/karlhenderson/Qt5.3.2/5.3/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/Users/karlhenderson/Qt5.3.2/5.3/clang_64/mkspecs/macx-clang -I/Users/karlhenderson/Documents/eecs493/Assignment_2 -I/Users/karlhenderson/Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Headers -I/Users/karlhenderson/Qt5.3.2/5.3/clang_64/lib/QtGui.framework/Headers -I/Users/karlhenderson/Qt5.3.2/5.3/clang_64/lib/QtCore.framework/Headers -I. -F/Users/karlhenderson/Qt5.3.2/5.3/clang_64/lib ../Assignment_2/boximage.h -o moc_boximage.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -528,6 +572,18 @@ main.o: ../Assignment_2/main.cpp ../Assignment_2/mainwindow.h \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QGridLayout \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QWidget \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qwidget.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QSplitter \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qsplitter.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenu \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenu.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenuBar \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenubar.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qaction.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QScrollArea \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qscrollarea.h \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QApplication \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Assignment_2/main.cpp
@@ -538,11 +594,55 @@ mainwindow.o: ../Assignment_2/mainwindow.cpp ../Assignment_2/mainwindow.h \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QPushButton \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h \
 		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QGridLayout \
-		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QWidget \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qwidget.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QSplitter \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qsplitter.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenu \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenu.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenuBar \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenubar.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qaction.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QScrollArea \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qscrollarea.h \
+		../Assignment_2/boximage.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMessageBox \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../Assignment_2/mainwindow.cpp
+
+boximage.o: ../Assignment_2/boximage.cpp ../Assignment_2/boximage.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QWidget \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qwidget.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h \
+		../Assignment_2/mainwindow.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QPushButton \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QGridLayout \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QSplitter \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qsplitter.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenu \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenu.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenuBar \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmenubar.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qaction.h \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QScrollArea \
+		../../../Qt5.3.2/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qscrollarea.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o boximage.o ../Assignment_2/boximage.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_boximage.o: moc_boximage.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_boximage.o moc_boximage.cpp
 
 ####### Install
 

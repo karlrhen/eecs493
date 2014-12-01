@@ -1,12 +1,20 @@
 #include "mainwindow.h"
+#include "boximage.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    // Create Box Image Widget
+    right_layout = new QGridLayout();
+    box_image_widget = new BoxImage(this,right_layout);
+
     // Create Buttons
     add_collection_button = new QPushButton("Add Collection");
     add_image_button      = new QPushButton("Add Image");
     remove_all_button     = new QPushButton("Remove All");
+
+    // Create Button Functionality
+    create_button_content();
 
     // Create Layout
     left_layout = new QGridLayout();
@@ -27,32 +35,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Set Layout
     left_widget->setLayout(left_layout);
+    box_image_widget->setLayout(right_layout);
 
     // Create Menus & Actions;
     create_actions();
     create_menu_bars();
 
-    //Create Temp Buttons, Temp Widget, & Temp Layout
-    QPushButton *temp_button_one   = new QPushButton("Temp 1");
-    QPushButton *temp_button_two   = new QPushButton("Temp 2");
-    QPushButton *temp_button_three = new QPushButton("Temp 3");
-    QWidget *right_widget = new QWidget;
-    QGridLayout *right_layout = new QGridLayout();
-
-    // Add Temp Buttons to Layout
-    right_layout->addWidget(temp_button_one,   1, 0);
-    right_layout->addWidget(temp_button_two,   2, 0);
-    right_layout->addWidget(temp_button_three, 3, 0);
-
-    // Set Temp Layout
-    right_widget->setLayout(right_layout);
-
     // Add Left & Right Widget to QSplitter
     screen_splitter->addWidget(left_widget);
-    screen_splitter->addWidget(right_widget);
+    screen_splitter->addWidget(box_image_widget);
 
     // Set Central Widget
     this->setCentralWidget(screen_splitter);
+
 }
 
 void MainWindow::create_menu_bars()
@@ -126,22 +121,9 @@ void MainWindow::create_actions()
 
 void MainWindow::create_button_content()
 {
-
-}
-
-void MainWindow::assign_add_collection_button_content()
-{
-
-}
-
-void MainWindow::assign_add_image_button_content()
-{
-
-}
-
-void MainWindow::assign_remove_all_button_content()
-{
-
+    connect(add_collection_button, SIGNAL(clicked()), box_image_widget, SLOT(assign_add_collection_button_content()));
+    connect(add_image_button,      SIGNAL(clicked()), box_image_widget, SLOT(assign_add_image_button_content()));
+    connect(remove_all_button,     SIGNAL(clicked()), box_image_widget, SLOT(assign_remove_all_button_content()));
 }
 
 MainWindow::~MainWindow()

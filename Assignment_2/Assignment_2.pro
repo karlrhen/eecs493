@@ -14,6 +14,8 @@ TEMPLATE = app
 QMAKE_MAC_SDK = macosx10.9
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    boximage.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    boximage.h

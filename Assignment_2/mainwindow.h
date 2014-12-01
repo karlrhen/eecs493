@@ -9,7 +9,9 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QAction>
-#include <QActionGroup>
+#include <QScrollArea>
+
+class BoxImage;
 
 class MainWindow : public QMainWindow
 {
@@ -17,6 +19,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = 0);
+    BoxImage *box_image_widget;
     ~MainWindow();
 
 private:
@@ -25,6 +28,7 @@ private:
     void create_actions();
 
     QGridLayout *left_layout;
+    QGridLayout *right_layout;
     QWidget     *left_widget;
     QSplitter   *screen_splitter;
 
@@ -53,9 +57,7 @@ private:
     QAction *remove_all_images_action;
 
 private slots:
-    void assign_add_collection_button_content();
-    void assign_add_image_button_content();
-    void assign_remove_all_button_content();
+
 };
 
 #endif // MAINWINDOW_H

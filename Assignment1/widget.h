@@ -4,7 +4,13 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QGridLayout>
+#include <QVariant>
+#include <QSpacerItem>
+#include <QButtonGroup>
 #include <QMessageBox>
+#include <iostream>
+
+using namespace std;
 
 
 class Widget : public QWidget
@@ -13,7 +19,6 @@ class Widget : public QWidget
 
 public:
     Widget(QWidget *parent = 0);
-    void create_button_content();
     ~Widget();
 
 private:
@@ -25,17 +30,16 @@ private:
    QPushButton *button_six;
    QPushButton *button_seven;
 
-   QGridLayout *grid_layout;
+   QButtonGroup *button_group;
+   QGridLayout  *grid_layout;
+
+   QMessageBox *button_message;
+
+   QSpacerItem *add_space;
 
 private slots:
-    void assign_button_one_content();
-    void assign_button_two_content();
-    void assign_button_three_content();
-    void assign_button_four_content();
-    void assign_button_five_content();
-    void assign_button_six_content();
-    void assign_button_seven_content();
-
+    void assign_button_content(int button_index);
+    void assign_quit_button_content();
 };
 
 #endif // WIDGET_H

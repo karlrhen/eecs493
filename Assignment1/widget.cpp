@@ -4,6 +4,7 @@
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
+
     // Create Buttons
     button_one   = new QPushButton("button 1");
     button_two   = new QPushButton("button 2");
@@ -13,86 +14,83 @@ Widget::Widget(QWidget *parent)
     button_six   = new QPushButton("button 6");
     button_seven = new QPushButton("quit");
 
+    // Create QButtonGroup
+    button_group = new QButtonGroup();
+
+    // Add Buttons to QButtonGroup
+    button_group->addButton(button_one  ,1);
+    button_group->addButton(button_two  ,2);
+    button_group->addButton(button_three,3);
+    button_group->addButton(button_four ,4);
+    button_group->addButton(button_five ,5);
+    button_group->addButton(button_six  ,6);
+
     // Create Grid Layout
     grid_layout = new QGridLayout();
 
+    // Create QSpace
+    add_space = new QSpacerItem(15,15,QSizePolicy::Fixed, QSizePolicy::Fixed);
+
     // Add Buttons To Grid Layout
-    grid_layout->addWidget(button_one,   1, 1);
-    grid_layout->addWidget(button_two,   1, 2);
-    grid_layout->addWidget(button_three, 1, 3);
-    grid_layout->addWidget(button_four,  2, 1);
-    grid_layout->addWidget(button_five,  2, 2);
-    grid_layout->addWidget(button_six,   2, 3);
-    grid_layout->addWidget(button_seven, 3, 2);
+    grid_layout->addWidget(button_group->button(1), 1, 1);
+    grid_layout->addWidget(button_group->button(2), 1, 2);
+    grid_layout->addWidget(button_group->button(3), 1, 3);
+    grid_layout->addWidget(button_group->button(4), 2, 1);
+    grid_layout->addWidget(button_group->button(5), 2, 2);
+    grid_layout->addWidget(button_group->button(6), 2, 3);
+    grid_layout->addItem(add_space, 3, 2);
+    grid_layout->addWidget(button_seven           , 4, 2);
 
     // Set Layout
     this->setLayout(grid_layout);
 
     // Add Button Fuctionality
-    create_button_content();
+    connect(button_group, SIGNAL(buttonClicked(int)), this, SLOT(assign_button_content(int)));
+    connect(button_seven, SIGNAL(clicked()), this, SLOT(assign_quit_button_content()));
 }
 
-void Widget::create_button_content()
+
+
+void Widget::assign_button_content(int button_index)
 {
-    connect(button_one,   SIGNAL(clicked()), this, SLOT(assign_button_one_content()));
-    connect(button_two,   SIGNAL(clicked()), this, SLOT(assign_button_two_content()));
-    connect(button_three, SIGNAL(clicked()), this, SLOT(assign_button_three_content()));
-    connect(button_four,  SIGNAL(clicked()), this, SLOT(assign_button_four_content()));
-    connect(button_five,  SIGNAL(clicked()), this, SLOT(assign_button_five_content()));
-    connect(button_six,   SIGNAL(clicked()), this, SLOT(assign_button_six_content()));
-    connect(button_seven, SIGNAL(clicked()), this, SLOT(assign_button_seven_content()));
+    // Create QMessage Box
+    button_message = new QMessageBox();
 
+    //Set the Text of the QMessageBox
+    switch(button_index)
+    {
+        case 1:
+            button_message->setText("this little piggy went to market");
+            button_message->exec();
+            break;
+        case 2:
+            button_message->setText("this little piggy stayed home");
+            button_message->exec();
+            break;
+        case 3:
+            button_message->setText("this little piggy had roast beef");
+            button_message->exec();
+            break;
+        case 4:
+            button_message->setText("this little piggy had none");
+            button_message->exec();
+            break;
+        case 5:
+            button_message->setText("this little piggy went wee wee wee wee wee, all the way home");
+            button_message->exec();
+            break;
+        case 6:
+            button_message->setText("this little piggy had 6 toes");
+            button_message->exec();
+            break;
+        default:
+            break;
+    }
 }
 
-void Widget::assign_button_one_content()
-{
-    QMessageBox *button_message = new QMessageBox();
-    button_message->setText("This Little Piggy went to market");
-    button_message->exec();
 
-}
 
-void Widget::assign_button_two_content()
-{
-    QMessageBox *button_message = new QMessageBox();
-    button_message->setText("This Little Piggy went home");
-    button_message->exec();
-
-}
-
-void Widget::assign_button_three_content()
-{
-    QMessageBox *button_message = new QMessageBox();
-    button_message->setText("This Little Piggy had roast beef");
-    button_message->exec();
-
-}
-
-void Widget::assign_button_four_content()
-{
-    QMessageBox *button_message = new QMessageBox();
-    button_message->setText("This Little Piggy had none");
-    button_message->exec();
-
-}
-
-void Widget::assign_button_five_content()
-{
-    QMessageBox *button_message = new QMessageBox();
-    button_message->setText("This Little Piggy went wee wee wee");
-    button_message->exec();
-
-}
-
-void Widget::assign_button_six_content()
-{
-    QMessageBox *button_message = new QMessageBox();
-    button_message->setText("This Last Little Piggy was OWT AF");
-    button_message->exec();
-
-}
-
-void Widget::assign_button_seven_content()
+void Widget::assign_quit_button_content()
 {
     this->close();
 }

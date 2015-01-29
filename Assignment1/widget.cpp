@@ -46,7 +46,7 @@ Widget::Widget(QWidget *parent)
 
     // Add Button Fuctionality
     connect(button_group, SIGNAL(buttonClicked(int)), this, SLOT(assign_button_content(int)));
-    connect(button_seven, SIGNAL(clicked()), this, SLOT(assign_quit_button_content()));
+    connect(button_seven, SIGNAL(clicked()),          this, SLOT(assign_quit_button_content()));
 }
 
 

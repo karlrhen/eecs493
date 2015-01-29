@@ -8,7 +8,6 @@
 #include <QSpacerItem>
 #include <QButtonGroup>
 #include <QMessageBox>
-#include <iostream>
 
 using namespace std;
 
@@ -22,6 +21,7 @@ public:
     ~Widget();
 
 private:
+   // Buttons to be Displayed
    QPushButton *button_one;
    QPushButton *button_two;
    QPushButton *button_three;
@@ -32,10 +32,8 @@ private:
 
    QButtonGroup *button_group;
    QGridLayout  *grid_layout;
-
-   QMessageBox *button_message;
-
-   QSpacerItem *add_space;
+   QMessageBox  *button_message;
+   QSpacerItem  *add_space;
 
 private slots:
     void assign_button_content(int button_index);

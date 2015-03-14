@@ -4,22 +4,31 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    // Create Box Image Widget
+    // Create Box Image Widget & Set Constraints
     right_layout = new QGridLayout();
     box_image_widget = new BoxImage(this,right_layout);
+    box_image_widget->setMaximumWidth(770);
+
+    // Create Scroll Area
+    scroll_area = new QScrollArea();
+    scroll_area->setWidgetResizable(true);
 
     // Create Buttons
     add_collection_button = new QPushButton("Add Collection");
     add_image_button      = new QPushButton("Add Image");
     remove_all_button     = new QPushButton("Remove All");
 
-    // Create Button Functionality
+    add_collection_button->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    add_image_button->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    remove_all_button->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+    // Create QClipboard
+    clip_board = QApplication::clipboard();
+
+    // Create Button & Action Functionality
+    create_actions();
     create_button_content();
-
-    // Create Scroll Area
-    scroll_area = new QScrollArea();
-    scroll_area->setWidgetResizable(true);
-
+    create_action_content();
     // Create Layout
     left_layout = new QGridLayout();
 
@@ -42,14 +51,12 @@ MainWindow::MainWindow(QWidget *parent)
     box_image_widget->setLayout(right_layout);
     scroll_area->setWidget(box_image_widget);
 
-    // Create Menus & Actions;
-    create_actions();
+    // Create Menus
     create_menu_bars();
 
     // Add Left & Right Widget to QSplitter
     screen_splitter->addWidget(left_widget);
-    screen_splitter->addWidget(box_image_widget);
-
+    screen_splitter->addWidget(scroll_area);
     // Set Central Widget
     this->setCentralWidget(screen_splitter);
 
@@ -70,18 +77,20 @@ void MainWindow::create_menu_bars()
     edit_menu->addAction(undo_action);
     edit_menu->addAction(redo_action);
     edit_menu->addSeparator();
-   // edit_menu->addAction(cut_action);
-   // edit_menu->addAction(copy_action);
-   // edit_menu->addAction(paste_action);
     edit_menu->addAction(add_collection_action);
     edit_menu->addAction(add_image_action);
     edit_menu->addAction(remove_all_images_action);
+    //edit_menu->addAction(cut_action);
+    //edit_menu->addAction(copy_action);
+    //edit_menu->addAction(paste_action);
+    edit_menu->addSeparator();
 
-  /*  images_menu = menuBar()->addMenu(tr("&Images"));
+    /*
+    images_menu = menuBar()->addMenu(tr("&Images"));
     images_menu->addAction(add_collection_action);
     images_menu->addAction(add_image_action);
     images_menu->addAction(remove_all_images_action);
-   */
+    */
 }
 
 void MainWindow::create_actions()
@@ -132,6 +141,30 @@ void MainWindow::create_button_content()
     connect(add_collection_button, SIGNAL(clicked()), box_image_widget, SLOT(assign_add_collection_button_content()));
     connect(add_image_button,      SIGNAL(clicked()), box_image_widget, SLOT(assign_add_image_button_content()));
     connect(remove_all_button,     SIGNAL(clicked()), box_image_widget, SLOT(assign_remove_all_button_content()));
+}
+void MainWindow::create_action_content()
+{
+    connect (new_action,               SIGNAL(triggered()), box_image_widget, SLOT(assign_not_implemented_msg()));
+    connect (open_action,              SIGNAL(triggered()), box_image_widget, SLOT(assign_not_implemented_msg()));
+    connect (save_action,              SIGNAL(triggered()), box_image_widget, SLOT(assign_not_implemented_msg()));
+    connect (save_as_action,           SIGNAL(triggered()), box_image_widget, SLOT(assign_not_implemented_msg()));
+    connect (exit_action,              SIGNAL(triggered()), box_image_widget, SLOT(assign_quit_action()));
+    connect (undo_action,              SIGNAL(triggered()), box_image_widget, SLOT(assign_not_implemented_msg()));
+    connect (redo_action,              SIGNAL(triggered()), box_image_widget, SLOT(assign_not_implemented_msg()));
+    connect (cut_action,               SIGNAL(triggered()), box_image_widget, SLOT(assign_cut_action()));
+    connect (copy_action,              SIGNAL(triggered()), box_image_widget, SLOT(assign_copy_action()));
+    connect (paste_action,             SIGNAL(triggered()), box_image_widget, SLOT(assign_paste_action()));
+    connect (add_collection_action,    SIGNAL(triggered()), box_image_widget, SLOT(assign_add_collection_button_content()));
+    connect (add_image_action,         SIGNAL(triggered()), box_image_widget, SLOT(assign_add_image_button_content()));
+    connect (remove_all_images_action, SIGNAL(triggered()), box_image_widget, SLOT(assign_remove_all_button_content()));
+
+    connect (clip_board, SIGNAL(dataChanged()), this, SLOT(assign_clip_board_action()));
+
+}
+
+void MainWindow::assign_clip_board_action()
+{
+    clip_board->image().isNull() ? paste_action->setEnabled(false):paste_action->setEnabled(true);
 }
 
 MainWindow::~MainWindow()

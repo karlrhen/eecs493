@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QApplication>
 #include <QPushButton>
 #include <QGridLayout>
 #include <QWidget>
@@ -24,6 +25,7 @@ public:
 
 private:
     void create_button_content();
+    void create_action_content();
     void create_menu_bars();
     void create_actions();
 
@@ -37,9 +39,11 @@ private:
     QPushButton *add_image_button;
     QPushButton *remove_all_button;
 
+    QClipboard *clip_board;
+
     QMenu *file_menu;
     QMenu *edit_menu;
-    QMenu *images_menu;
+   // QMenu *images_menu;
 
     QAction *new_action;
     QAction *open_action;
@@ -58,6 +62,7 @@ private:
     QAction *remove_all_images_action;
 
 private slots:
+    void assign_clip_board_action();
 
 };
 

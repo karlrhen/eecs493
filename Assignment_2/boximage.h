@@ -11,6 +11,8 @@
 #include <QVector>
 #include "mainwindow.h"
 
+const unsigned int IMAGE_SIZE = 150;
+
 class BoxImage : public QWidget
 {
     Q_OBJECT

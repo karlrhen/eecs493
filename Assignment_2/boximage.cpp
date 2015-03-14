@@ -12,6 +12,15 @@ BoxImage::BoxImage(QWidget *parent, QGridLayout *_image_grid_layout) :
     image_grid_layout_row  = 0;
     image_grid_layout_col  = 0;
 
+    // Set some specifications for BoxImage
+    for (unsigned i= 0; i < 5; ++i)
+    {
+        image_grid_layout->setColumnMinimumWidth(i,IMAGE_SIZE + 8);
+        image_grid_layout->setColumnStretch(i,0);
+    }
+      image_grid_layout->setOriginCorner(Qt::TopLeftCorner);
+      image_grid_layout->setSpacing(0);
+
 }
 
 void BoxImage::assign_add_collection_button_content()
@@ -30,6 +39,7 @@ void BoxImage::assign_add_image_button_content()
 
     // Create QPixmap & QLabel
     image_pixmap = QPixmap(file_name);
+    image_pixmap.scaled(IMAGE_SIZE,IMAGE_SIZE);
     image_label  = new QLabel();
 
     // Set Pixmap

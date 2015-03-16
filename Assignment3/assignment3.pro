@@ -13,24 +13,26 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = assignment4
 TEMPLATE = app
 
-QMAKE_MAC_SDK = macosx10.9
-
 
 SOURCES += main.cpp\
         mainwindow.cpp \
         boximage.cpp \
-        deleteallcommand.cpp \
-        deleteimagecommand.cpp \
-        addcollectioncommand.cpp \
-        addimagecommand.cpp
+        imagecollector.cpp \
+    deleteallcommand.cpp \
+    deleteimagecommand.cpp \
+    addcollectioncommand.cpp \
+    addimagecommand.cpp \
+    flickrcollector.cpp
 
 
 
 HEADERS  += mainwindow.h \
             boximage.h \
-            deleteallcommand.h \
-            deleteimagecommand.h \
-            addcollectioncommand.h \
-            addimagecommand.h
+            imagecollector.h\
+    deleteallcommand.h \
+    deleteimagecommand.h \
+    addcollectioncommand.h \
+    addimagecommand.h \
+    flickrcollector.h
 
 FORMS    += mainwindow.ui

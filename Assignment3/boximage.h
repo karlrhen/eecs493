@@ -7,8 +7,6 @@
 #include <QFrame>
 #include <QToolButton>
 #include <QMimeData>
-#include "flickrcollector.h"
-#include "imagecollector.h"
 
 class QUndoStack;
 class BoxImage : public QFrame
@@ -35,8 +33,6 @@ class BoxImage : public QFrame
   void appendImage(QPixmap pixmap_incoming);
   QToolButton *newToolButton(QPixmap pixmap_incoming);
   void insertImageCallback(int insertLoc);
-  FlickrCollector *flickrCollector;
-  ImageCollector *imageCollector;
   //MainWindow* mainWindow;
   QVector<QPixmap> flickrVec;
   int flickrCounter;

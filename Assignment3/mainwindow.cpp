@@ -13,6 +13,8 @@
 #include <QScrollArea>
 #include <QTimer>
 #include <QUndoView>
+#include <QPushButton>
+#include <QClipboard>
 
 static const int BUTTON_SIZE = 150;
 
@@ -63,23 +65,6 @@ MainWindow::MainWindow(QWidget *parent)
    deleteImageAction = new QAction("&Delete Image",this);
    deleteImageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
 
-   addFlickrCollectionAction = new QAction("Flickr", this);
-   addFlickrCollectionAction->setShortcut(QKeySequence::AddTab);
-
-   // Extra Credit Code
-   timer = new QTimer(this);
-   timer->stop();
-   timer->setInterval(2000);
-   timer->setSingleShot(false);
-   connect(timer, SIGNAL(timeout()), SLOT(playCallback()));
-
-
-
-   playAction = new QAction("&Play", this);
-   playAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
-
-   stopAction = new QAction("&Stop", this);
-   stopAction->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_T));
 
    QMenu* fileMenu = this->menuBar()->addMenu("&File");
    fileMenu->addAction(newAction);
@@ -106,42 +91,34 @@ MainWindow::MainWindow(QWidget *parent)
    imageMenu->addAction(addCollectionAction);
    imageMenu->addAction(addImageAction);
    imageMenu->addSeparator();
-   imageMenu->addAction(addFlickrCollectionAction);
    imageMenu->addSeparator();
    imageMenu->addAction(deleteAllAction);
    imageMenu->addAction(deleteImageAction);
 
-   // Extra Credit Code
-   QMenu* playBackMenu = this->menuBar()->addMenu("&Playback");
-   playBackMenu->addAction(playAction);
-   playBackMenu->addAction(stopAction);
 
 
-
-   QFrame *leftWidget = new QFrame();
+   QWidget *leftWidget = new QWidget();
    QGridLayout *leftLayout = new QGridLayout();
    leftWidget->setLayout(leftLayout);
-   //leftWidget->setStyleSheet("QFrame { background-color: rgb(219, 226, 228); }");
 
-   dock = new QDockWidget();
-   dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+   // Create Buttons
+   QPushButton *add_collection_button = new QPushButton("Add Collection");
+   QPushButton *add_image_button      = new QPushButton("Add Image");
+   QPushButton *remove_all_button     = new QPushButton("Remove All");
 
-   QFrame *innerWidget = new QFrame();
-   QGridLayout *innerLayout = new QGridLayout();
-   innerWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-   innerWidget->setLayout(innerLayout);
+   add_collection_button->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+   add_image_button->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+   remove_all_button->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+   // Add Buttons to Layout
+   leftLayout->addWidget(add_collection_button, 1, 0);
+   leftLayout->addWidget(add_image_button,      2, 0);
+   leftLayout->addWidget(remove_all_button,     3, 0);
+
+   leftLayout->setVerticalSpacing(4);
 
    button       = NULL;
 
-   previewLabel = new QLabel();
-   previewLabel->setMinimumSize(PREVIEW_SIZE, PREVIEW_SIZE);
-   previewLabel->setMaximumSize(PREVIEW_SIZE, PREVIEW_SIZE);
-   innerLayout->addWidget(previewLabel);
-
-   leftLayout->addWidget(innerWidget,0,0, Qt::AlignTop);
-   dock->setWidget(leftWidget);
-   dock->setFeatures(QDockWidget::AllDockWidgetFeatures);
-   addDockWidget(Qt::LeftDockWidgetArea, dock);
 
    QScrollArea *scrollArea = new QScrollArea();
    scrollArea->setWidgetResizable(1);
@@ -149,15 +126,15 @@ MainWindow::MainWindow(QWidget *parent)
    boxImage->setMaximumWidth(BUTTON_SIZE*5+20);
    boxImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
    scrollArea->setWidget(boxImage);
-   //splitter->addWidget(scrollArea);
-   //boxImage->setStyleSheet("QFrame { background-color: rgb(254,254,254); }");
-   //scrollArea->setStyleSheet("QScrollArea { background-color: rgb(254,254,254); }");
 
 
-   setStyleSheet("QSplitter {background-color: rgb(219, 226, 228);}");
    QList<int> sizeList = QList<int>() << 200 << BUTTON_SIZE*5;
-   //splitter->setSizes(sizeList);
-   this->setCentralWidget(scrollArea);
+
+   QSplitter *screen_splitter = new QSplitter();
+   screen_splitter->addWidget(leftWidget);
+   screen_splitter->addWidget(scrollArea);
+
+   this->setCentralWidget(screen_splitter);
    this->resize(BUTTON_SIZE*5+200,400);
 
 
@@ -172,7 +149,6 @@ MainWindow::MainWindow(QWidget *parent)
    connect (copyAction,          SIGNAL(triggered()), boxImage, SLOT(copyCallback()));
    connect (pasteAction,         SIGNAL(triggered()), boxImage, SLOT(pasteCallback()));
 
-   connect (addFlickrCollectionAction, SIGNAL(triggered()), boxImage, SLOT(executeFlickr()));
    connect (clipBoard,                 SIGNAL(dataChanged()), this, SLOT(clipBoardCallback()));
    connect (boxImage->buttonGroup,     SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(buttonEmit(QAbstractButton*)));
 
@@ -180,10 +156,6 @@ MainWindow::MainWindow(QWidget *parent)
    connect(openAction,  SIGNAL(triggered()),this,SLOT(notYetCallback()));
    connect(saveAction,  SIGNAL(triggered()),this,SLOT(notYetCallback()));
    connect(saveAsAction,SIGNAL(triggered()),this,SLOT(notYetCallback()));
-
-   connect(playAction,  SIGNAL(triggered()),this,SLOT(playCallback()));
-   connect(stopAction,  SIGNAL(triggered()),this,SLOT(notYetCallback()));
-
 
 }
 
@@ -215,7 +187,6 @@ void MainWindow::clearButton()
     if(!button)
     {
         boxImage->buttonGroup->setExclusive(false);
-        //sbutton->setChecked(true);///was false
         button = NULL;
         boxImage->buttonGroup->setExclusive(false);
     }
@@ -269,58 +240,4 @@ void MainWindow::setCCP(bool enabled)
     copyAction->setEnabled(enabled);
     cutAction->setEnabled(enabled);
 
-}
-///// to revert changes make boximage protected
-/*void MainWindow::playCallback()
-{
-    QLayoutItem *item;
-    QIcon icon;
-    qDebug() << "there are " << boxImage->imageGrid->count() << " pics ";
-    int imageGridSize = boxImage->imageGrid->count();
-    for(int i = 0; i < imageGridSize; i++)
-    {
-        item = boxImage->imageGrid->itemAt(i);
-        icon = (dynamic_cast<QToolButton *>(item->widget()))->icon();
-        QPixmap pic = icon.pixmap(PIC_SIZE, PIC_SIZE).scaled(PREVIEW_SIZE, PREVIEW_SIZE, Qt::KeepAspectRatio);
-        previewLabel->setPixmap(pic);
-        qDebug() << "I'm going through pic " << i;
-    }
-}*/
-
-void MainWindow::playCallback()
-{
-   //auto gridPtr = boxImage;
-   QAbstractButton  *currentImage = button;
-   if(currentImage)
-   {
-       setupPreview(currentImage);
-   }
-   else
-   {
-        qDebug() << "No Image Available";
-   }
-   timer->start();
-}
-
-void MainWindow::stopCallback()
-{
-    timer->stop();
-    setupPreview(button);
-}
-
-void MainWindow::updatePlayback()
-{
-   int index = boxImage->imageGrid->indexOf((button)+1);
-   //nextImage = boxImage->imageGrid->itemAt(index);
-
-  
-
-   if(nextImage)
-   {
-       setupPreview(nextImage);
-   }
-   else
-   {
-       qDebug() << "No nextImage available";
-   }
 }

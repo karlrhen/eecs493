@@ -22,29 +22,21 @@
 #include "deleteimagecommand.h"
 #include "addcollectioncommand.h"
 #include "addimagecommand.h"
-#include "flickrcollector.h"
-#include "imagecollector.h"
 #include <cassert>
 const int IMAGE_SIZE = 144;
 const int BUTTON_SIZE = 150;
 
-BoxImage::BoxImage(QUndoStack *undoStack_incoming, QClipboard *clipBoardIn,
-                   QAction *addCollectionIn, QAction *addImageIn, QWidget *parent)
+BoxImage::BoxImage(QUndoStack *undoStack_incoming, QClipboard *clipboard_incoming,
+                   QAction *add_collection_incoming, QAction *add_image_incoming, QWidget *parent)
   : QFrame(parent)
 {
   undoStack = undoStack_incoming;
   imageGrid = new QGridLayout();
-  clipBoard = clipBoardIn;
-  addCollectionAction = addCollectionIn;
-  addImageAction = addImageIn;
+  clipBoard = clipboard_incoming;
+  addCollectionAction = add_collection_incoming;
+  addImageAction = add_image_incoming;
 
-  imageCollector  = new ImageCollector();
   imageGrid       = new QGridLayout();
-  flickrCollector = new FlickrCollector(this);
-
-  connect(flickrCollector, SIGNAL(ready()),  this, SLOT(addFlickrReady()));
-  connect(flickrCollector, SIGNAL(failed()), this, SLOT(addFlickrFailed()));
-  connect(imageCollector,  SIGNAL(pixmapAvailable(QPixmap)), this, SLOT(imageCollectorPixmap(QPixmap)));
 
   this->setLayout(imageGrid);
   counter = 0;
@@ -399,55 +391,3 @@ void BoxImage::deleteImages(int begin, int end)
   qDebug() << "It crashed smh ";
 }
 
-void BoxImage::executeFlickr()
-{
-    addImageAction->setEnabled(false);
-    addCollectionAction->setEnabled(false);
-    flickrVec.clear();
-    flickrCounter = 1;
-    flickrCollector->execute();
-}
-
-void BoxImage::addFlickrFailed()
-{
-    addImageAction->setEnabled(true);
-    addCollectionAction->setEnabled(true);
-}
-
-void BoxImage::addFlickrReady()
-{
-    qDebug() << "yeeeaaa" << endl;
-    QStringList urlList = flickrCollector->list();
-    flickrCounter = urlList.size();
-    flickrCollector->printList();
-    foreach(QString url, urlList)
-    {
-        qDebug()<<"url:"<<url;
-        imageCollector->loadImage(url);
-    }
-}
-
-void BoxImage::imageCollectorPixmap(QPixmap pixmap)
-{
-   qDebug() << pixmap.isNull();
-   //QPixmap temp = imageCollector->flickrPixmap;
-    if(!pixmap.isNull())
-    {
-        qDebug() << "uhhhuhh";
-
-        flickrVec.append(pixmap);
-        --flickrCounter;
-    }
-
-    if(flickrCounter == 0)
-    {
-         qDebug() << "flickrcounter is 0 and size is " << flickrVec.size();
-
-
-        AddCollectionCommand *command = new AddCollectionCommand("Add F Image", flickrVec,
-                                                                 imageGrid->count(),this);
-      undoStack->push(command);
-        addImageAction->setEnabled(true);
-        addCollectionAction->setEnabled(true);
-    }
-}
